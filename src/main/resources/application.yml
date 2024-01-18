@@ -1,0 +1,10 @@
+server:
+  port: 3002
+logging:
+  logback:
+    rollingpolicy:
+      max-file-size: 500MB
+spring:
+  servlet:
+    multipart:
+      max-request-size: 500MB
