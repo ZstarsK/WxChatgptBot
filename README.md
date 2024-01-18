@@ -9,3 +9,5 @@
 优化代码结构
 实现群聊聊天支持
 实现上下文串联
+
+Based on: https://github.com/danni-cool/wechatbot-webhook/
