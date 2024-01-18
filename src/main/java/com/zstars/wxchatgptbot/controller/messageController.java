@@ -2,6 +2,7 @@ package com.zstars.wxchatgptbot.controller;
 
 import com.zstars.wxchatgptbot.service.GptService;
 import com.zstars.wxchatgptbot.util.GetSenderNameUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,6 +13,8 @@ import java.io.IOException;
 public class messageController {
 
     private final GetSenderNameUtil getSenderNameUtil;
+    @Autowired
+    GptService gptService;
 
     public messageController(GetSenderNameUtil getSenderNameUtil) {
         this.getSenderNameUtil = getSenderNameUtil;
@@ -36,7 +39,7 @@ public class messageController {
                 System.out.println("Received text message from :"+senderName +"---- text:"+ content);
                 
                 if (!senderName.isEmpty()) {
-                    GptService.askChatgpt(content, senderName);
+                    gptService.askChatgpt(content, senderName);
                 }
                 break;
             case "file":

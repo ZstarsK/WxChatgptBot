@@ -20,7 +20,7 @@ import java.io.IOException;
 public class SendService {
     
 
-    public static void sendMessage(String to, String content, boolean isRoom) throws JSONException {
+    public void sendMessage(String to, String content, boolean isRoom) throws JSONException {
         String url = "http://localhost:3001/webhook/msg/v2";
 
         // 使用 JSONObject 构建 JSON
