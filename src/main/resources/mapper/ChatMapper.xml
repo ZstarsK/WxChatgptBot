@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zstars.wxchatgptbot.mapper.ChatMapper">
+
+    <resultMap id="BaseResultMap" type="com.zstars.wxchatgptbot.pojo.Chat">
+            <id property="chatid" column="ChatId" jdbcType="INTEGER"/>
+            <result property="userid" column="UserId" jdbcType="VARCHAR"/>
+            <result property="name" column="Name" jdbcType="VARCHAR"/>
+            <result property="prompt" column="Prompt" jdbcType="VARCHAR"/>
+            <result property="promptanswer" column="PromptAnswer" jdbcType="VARCHAR"/>
+            <result property="timestamp" column="Timestamp" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ChatId,UserId,Name,
+        Prompt,PromptAnswer,Timestamp
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from Chat
+        where  ChatId = #{chatid,jdbcType=INTEGER} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from Chat
+        where  ChatId = #{chatid,jdbcType=INTEGER} 
+    </delete>
+    <insert id="insert" keyColumn="ChatId" keyProperty="chatid" parameterType="com.zstars.wxchatgptbot.pojo.Chat" useGeneratedKeys="true">
+        insert into Chat
+        ( ChatId,UserId,Name
+        ,Prompt,PromptAnswer,Timestamp
+        )
+        values (#{chatid,jdbcType=INTEGER},#{userid,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR}
+        ,#{prompt,jdbcType=VARCHAR},#{promptanswer,jdbcType=VARCHAR},#{timestamp,jdbcType=VARCHAR}
+        )
+    </insert>
+    <insert id="insertSelective" keyColumn="ChatId" keyProperty="chatid" parameterType="com.zstars.wxchatgptbot.pojo.Chat" useGeneratedKeys="true">
+        insert into Chat
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="chatid != null">ChatId,</if>
+                <if test="userid != null">UserId,</if>
+                <if test="name != null">Name,</if>
+                <if test="prompt != null">Prompt,</if>
+                <if test="promptanswer != null">PromptAnswer,</if>
+                <if test="timestamp != null">Timestamp,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="chatid != null">#{chatid,jdbcType=INTEGER},</if>
+                <if test="userid != null">#{userid,jdbcType=VARCHAR},</if>
+                <if test="name != null">#{name,jdbcType=VARCHAR},</if>
+                <if test="prompt != null">#{prompt,jdbcType=VARCHAR},</if>
+                <if test="promptanswer != null">#{promptanswer,jdbcType=VARCHAR},</if>
+                <if test="timestamp != null">#{timestamp,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zstars.wxchatgptbot.pojo.Chat">
+        update Chat
+        <set>
+                <if test="userid != null">
+                    UserId = #{userid,jdbcType=VARCHAR},
+                </if>
+                <if test="name != null">
+                    Name = #{name,jdbcType=VARCHAR},
+                </if>
+                <if test="prompt != null">
+                    Prompt = #{prompt,jdbcType=VARCHAR},
+                </if>
+                <if test="promptanswer != null">
+                    PromptAnswer = #{promptanswer,jdbcType=VARCHAR},
+                </if>
+                <if test="timestamp != null">
+                    Timestamp = #{timestamp,jdbcType=VARCHAR},
+                </if>
+        </set>
+        where   ChatId = #{chatid,jdbcType=INTEGER} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zstars.wxchatgptbot.pojo.Chat">
+        update Chat
+        set 
+            UserId =  #{userid,jdbcType=VARCHAR},
+            Name =  #{name,jdbcType=VARCHAR},
+            Prompt =  #{prompt,jdbcType=VARCHAR},
+            PromptAnswer =  #{promptanswer,jdbcType=VARCHAR},
+            Timestamp =  #{timestamp,jdbcType=VARCHAR}
+        where   ChatId = #{chatid,jdbcType=INTEGER} 
+    </update>
+</mapper>
