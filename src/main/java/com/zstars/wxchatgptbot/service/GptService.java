@@ -1,5 +1,6 @@
 package com.zstars.wxchatgptbot.service;
 
+import com.zstars.wxchatgptbot.pojo.Sender;
 import com.zstars.wxchatgptbot.util.GetResTextUtil;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpHost;
@@ -24,14 +25,14 @@ public class GptService {
     
     @Autowired
     SendService sendService;
-    private static final String API_KEY = "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"; // API 密钥
+    private static final String API_KEY = "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"; // API 密钥
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
 
-    public void askChatgpt(String content, String senderName) throws IOException {
+    public void askChatgpt(String content, Sender sender) throws IOException {
         HttpHost proxy = new HttpHost("127.0.0.1", 8123);
         RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
-        
-        String prompt = "请用中文回答我的问题："+content; // 替换为您的对话内容
+        //System.out.println("111");
+        String prompt = content; // 替换为您的对话内容
         
         try (CloseableHttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(config).build()) {
             HttpPost request = getPost(prompt);
@@ -40,7 +41,7 @@ public class GptService {
                 
                 //输出
                 //System.out.println(GetResTextUtil.getText(responseBody));
-                sendService.sendMessage(senderName,GetResTextUtil.getText(responseBody),false);//假设当前不是群发
+                sendService.sendMessage(sender.getName(),GetResTextUtil.getText(responseBody), sender.isRoom());//假设当前不是群发
                 //System.out.println(responseBody);//返回完整Res
             }
         } catch (JSONException e) {
