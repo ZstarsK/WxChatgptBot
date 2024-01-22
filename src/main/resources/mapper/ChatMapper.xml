@@ -57,7 +57,13 @@
         )
         order by ChatId ASC
     </select>
-
+    <select id="findChatsByUserId_L1" resultType="com.zstars.wxchatgptbot.pojo.Chat">
+        SELECT *
+        FROM Chat
+        WHERE UserId = #{userId,jdbcType=VARCHAR}
+        ORDER BY ChatId DESC
+        LIMIT 1
+    </select>
 
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

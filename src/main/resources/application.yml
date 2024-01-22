@@ -9,7 +9,7 @@ spring:
     multipart:
       max-request-size: 500MB
   datasource:
-    url: jdbc:mysql://124.221.144.71:3306/wxBot?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://124.221.144.71:3306/wxBot?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -22,7 +22,6 @@ mybatis:
 Chatgpt:
   Version35: gpt-3.5-turbo-1106
   Version4: gpt-4-1106-preview
-  #API_KEY: "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"
   API_KEY: "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"
   API_URL: "https://api.openai.com/v1/chat/completions"
   

@@ -81,10 +81,11 @@ public class ChatService {
         JSONObject param = new JSONObject();
         param.put("model", model);
         param.put("messages", messagesArray);
-        param.put("max_tokens",1024);
+        param.put("max_tokens",2048);
 
         StringEntity entity = new StringEntity(param.toString(), "UTF-8");
         
+        //打印请求体
         System.out.println("请求体" + param);
         
         request.setEntity(entity);
@@ -109,7 +110,7 @@ public class ChatService {
         }
     }
 
-    public String ChatgptImage(MultipartFile contentFile) throws IOException, JSONException {
+    public String ChatgptImage(MultipartFile contentFile , Sender sender) throws IOException, JSONException {
         // 检查文件是否为空
         if (contentFile.isEmpty()) {
             throw new IllegalArgumentException("上传的文件不能为空");
@@ -118,7 +119,7 @@ public class ChatService {
         // 将文件转换为 Base64 编码的字符串
         String base64Image = convertFileToBase64(contentFile);
         // 构造 payload
-        JSONObject payload = getJsonObject(base64Image);
+        JSONObject payload = getJsonObject(base64Image, sender);
 
         // 发送请求
         HttpPost request = new HttpPost(API_URL);
@@ -126,9 +127,12 @@ public class ChatService {
         request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
         StringEntity entity = new StringEntity(payload.toString(), "UTF-8");
         request.setEntity(entity);
-
-        System.out.println(payload);
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+        //设置代理
+        HttpHost proxy = new HttpHost("127.0.0.1", 8123);
+        RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
+        //打印payload
+        //System.out.println(payload);
+        try (CloseableHttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(config).build();
              CloseableHttpResponse response = httpClient.execute(request)) {
             String responseBody = EntityUtils.toString(response.getEntity());
             return GetResTextUtil.getText(responseBody);
@@ -136,31 +140,32 @@ public class ChatService {
     }
 
     @NotNull
-    private static JSONObject getJsonObject(String base64Image) throws JSONException {
+    private JSONObject getJsonObject(String base64Image , Sender sender) throws JSONException {
         JSONObject payload = new JSONObject();
         payload.put("model", "gpt-4-vision-preview");
 
         JSONArray messagesArray = new JSONArray();
         JSONObject message = new JSONObject();
-        JSONArray contentArray = getJsonArray(base64Image);
+        JSONArray contentArray = getJsonArray(base64Image, sender);
 
         message.put("role", "user");
         message.put("content", contentArray);
         messagesArray.put(message);
 
         payload.put("messages", messagesArray);
-        payload.put("max_tokens", 300);
+        payload.put("max_tokens", 500);
         return payload;
     }
 
     @NotNull
-    private static JSONArray getJsonArray(String base64Image) throws JSONException {
+    private JSONArray getJsonArray(String base64Image, Sender sender) throws JSONException {
         JSONArray contentArray = new JSONArray();
-
+        Chat chat = chatMapper.findChatsByUserId_L1(sender.getId());
+        
         // 添加文本消息
         JSONObject textMessage = new JSONObject();
         textMessage.put("type", "text");
-        textMessage.put("text", "请你解析这张图片");
+        textMessage.put("text", chat.getPrompt());
         contentArray.put(textMessage);
 
         // 添加图片消息
@@ -168,6 +173,7 @@ public class ChatService {
         imageMessage.put("type", "image_url");
         JSONObject imageUrl = new JSONObject();
         imageUrl.put("url", "data:image/jpeg;base64," + base64Image);
+        imageUrl.put("detail", "low");
         imageMessage.put("image_url", imageUrl);
         contentArray.put(imageMessage);
         return contentArray;

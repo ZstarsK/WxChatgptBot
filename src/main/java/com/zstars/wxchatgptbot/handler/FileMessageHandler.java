@@ -33,7 +33,7 @@ public class FileMessageHandler extends MessageHandler {
         if (!sender.getName().isEmpty()) {
             //暂不支持群里消息图片处理
             if (!sender.isRoom()){
-                String gptRespond = chatService.ChatgptImage(content);
+                String gptRespond = chatService.ChatgptImage(content,sender);
                 // 保存聊天记录到数据库
                 saveChat(sender, "A image.", gptRespond);
                 // 发送消息

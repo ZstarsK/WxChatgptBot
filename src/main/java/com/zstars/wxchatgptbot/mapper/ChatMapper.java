@@ -35,8 +35,8 @@ public interface ChatMapper {
     List<Chat> findChatsByName(@Param("name") String name);
 
     List<Chat> findChatsByUserId(@Param("userId") String userId);
-
-    List<Chat> findChatsByUserId_L5(@Param("userId") String userId);
+    
+    Chat findChatsByUserId_L1(@Param("userId") String userId);
 
     @Select("SELECT ChatId FROM Chat WHERE UserId = #{userId} ORDER BY ChatId ASC LIMIT #{limit}")
     List<Integer> findOldestChatIds(@Param("userId") String userId, @Param("limit") int limit);
