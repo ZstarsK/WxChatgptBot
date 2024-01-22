@@ -17,4 +17,12 @@ spring:
 mybatis:
   type-aliases-package: com.zstars.wxchatgptbot.pojo # 实体类所在的包
   mapper-locations: classpath:mapper/*.xml # MyBatis 映射文件所在的位置
+
+
+Chatgpt:
+  Version35: gpt-3.5-turbo-1106
+  Version4: gpt-4-1106-preview
+  #API_KEY: "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"
+  API_KEY: "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"
+  API_URL: "https://api.openai.com/v1/chat/completions"
   

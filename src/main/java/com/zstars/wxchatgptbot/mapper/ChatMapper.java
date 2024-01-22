@@ -13,7 +13,7 @@ import java.util.List;
 * @author i-kevin
 * @description 针对表【Chat】的数据库操作Mapper
 * @createDate 2024-01-19 15:37:56
-* @Entity generator.domain.Chat
+* @Entity pojo.chat
 */
 @Repository
 public interface ChatMapper {

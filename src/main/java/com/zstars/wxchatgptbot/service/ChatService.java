@@ -4,6 +4,7 @@ import com.zstars.wxchatgptbot.mapper.ChatMapper;
 import com.zstars.wxchatgptbot.pojo.Chat;
 import com.zstars.wxchatgptbot.pojo.Sender;
 import com.zstars.wxchatgptbot.util.GetResTextUtil;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
@@ -15,69 +16,49 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.LinkedList;
+import java.io.InputStream;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ChatService {
 
     @Autowired
     private ChatMapper chatMapper;
-
-    @Autowired
-    private SendService sendService; // 假设您有这样一个用于发送信息的服务
-
-    private static final String API_KEY = "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";
-    private static final String API_URL = "https://api.openai.com/v1/chat/completions";
     
-    public void Chatgpt(String content, Sender sender) throws IOException {
+    @Value("${Chatgpt.Version4}")
+    private String model;
+    
+    @Value("${Chatgpt.API_KEY}")
+    private String API_KEY;
+    
+    @Value("${Chatgpt.API_URL}")
+    private String API_URL;
+    
+    public String ChatgptText(String content, Sender sender) throws IOException {
         HttpHost proxy = new HttpHost("127.0.0.1", 8123);
         RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
-        String prompt = content;
         
-
         try (CloseableHttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(config).build()) {
-            HttpPost request = getPost(prompt,sender);
+            HttpPost request = getPost(content,sender);
             try (CloseableHttpResponse response = httpClient.execute(request)) {
                 String responseBody = EntityUtils.toString(response.getEntity());
-                String answer = GetResTextUtil.getText(responseBody);
 
-                System.out.println(answer);
-                
-                // 保存聊天记录到数据库
-                saveChat(sender, content, answer);
-
-                // 发送消息
-                sendService.sendMessage(sender.getName(), answer, sender.isRoom());
+                return GetResTextUtil.getText(responseBody);
             }catch (Exception e) {
-                sendService.sendMessage(sender.getName(),"服务器错误，请稍后再试。", sender.isRoom());
+                return "服务器返回值错误，请稍后再试";
             }
         } catch (JSONException e) {
-            throw new RuntimeException(e);
+            return "服务器返回值错误，请稍后再试";
         }
     }
-
-
-
-
-    public void maintainChatHistory(String userId) {
-        // 查找需要删除的聊天记录ID
-        List<Integer> idsToDelete = chatMapper.findChatIdsToDelete(userId);
-
-        // 如果有需要删除的记录，则执行删除
-        if (!idsToDelete.isEmpty()) {
-            chatMapper.deleteChatsByIds(idsToDelete);
-        }
-    }
-
     
     @NotNull
     private HttpPost getPost(String prompt ,Sender sender) throws JSONException {
@@ -98,8 +79,9 @@ public class ChatService {
         messagesArray.put(putMessage(prompt,"user"));// 当前语句 放在最后
 
         JSONObject param = new JSONObject();
-        param.put("model", "gpt-3.5-turbo-1106");
+        param.put("model", model);
         param.put("messages", messagesArray);
+        param.put("max_tokens",1024);
 
         StringEntity entity = new StringEntity(param.toString(), "UTF-8");
         
@@ -117,14 +99,87 @@ public class ChatService {
         return message;
     }
 
-    private void saveChat(Sender sender, String prompt, String answer) {
-        Chat chat = new Chat();
-        chat.setName(sender.getName());
-        chat.setUserid(sender.getId());
-        chat.setPrompt(prompt);
-        chat.setPromptanswer(answer);
-        chat.setTimestamp(String.valueOf(new Date().getTime()));
-        System.out.println(chat);
-        chatMapper.insertChat(chat);
+    public void maintainChatHistory(String userId) {
+        // 查找需要删除的聊天记录ID
+        List<Integer> idsToDelete = chatMapper.findChatIdsToDelete(userId);
+
+        // 如果有需要删除的记录，则执行删除
+        if (!idsToDelete.isEmpty()) {
+            chatMapper.deleteChatsByIds(idsToDelete);
+        }
     }
+
+    public String ChatgptImage(MultipartFile contentFile) throws IOException, JSONException {
+        // 检查文件是否为空
+        if (contentFile.isEmpty()) {
+            throw new IllegalArgumentException("上传的文件不能为空");
+        }
+
+        // 将文件转换为 Base64 编码的字符串
+        String base64Image = convertFileToBase64(contentFile);
+        // 构造 payload
+        JSONObject payload = getJsonObject(base64Image);
+
+        // 发送请求
+        HttpPost request = new HttpPost(API_URL);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + API_KEY);
+        request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        StringEntity entity = new StringEntity(payload.toString(), "UTF-8");
+        request.setEntity(entity);
+
+        System.out.println(payload);
+        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+             CloseableHttpResponse response = httpClient.execute(request)) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            return GetResTextUtil.getText(responseBody);
+        }
+    }
+
+    @NotNull
+    private static JSONObject getJsonObject(String base64Image) throws JSONException {
+        JSONObject payload = new JSONObject();
+        payload.put("model", "gpt-4-vision-preview");
+
+        JSONArray messagesArray = new JSONArray();
+        JSONObject message = new JSONObject();
+        JSONArray contentArray = getJsonArray(base64Image);
+
+        message.put("role", "user");
+        message.put("content", contentArray);
+        messagesArray.put(message);
+
+        payload.put("messages", messagesArray);
+        payload.put("max_tokens", 300);
+        return payload;
+    }
+
+    @NotNull
+    private static JSONArray getJsonArray(String base64Image) throws JSONException {
+        JSONArray contentArray = new JSONArray();
+
+        // 添加文本消息
+        JSONObject textMessage = new JSONObject();
+        textMessage.put("type", "text");
+        textMessage.put("text", "请你解析这张图片");
+        contentArray.put(textMessage);
+
+        // 添加图片消息
+        JSONObject imageMessage = new JSONObject();
+        imageMessage.put("type", "image_url");
+        JSONObject imageUrl = new JSONObject();
+        imageUrl.put("url", "data:image/jpeg;base64," + base64Image);
+        imageMessage.put("image_url", imageUrl);
+        contentArray.put(imageMessage);
+        return contentArray;
+    }
+
+    private String convertFileToBase64(MultipartFile file) throws IOException {
+        byte[] bytes;
+        try (InputStream inputStream = file.getInputStream()) {
+            bytes = new byte[inputStream.available()];
+            inputStream.read(bytes);
+        }
+        return Base64.encodeBase64String(bytes);
+    }
+
 }
