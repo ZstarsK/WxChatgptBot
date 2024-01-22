@@ -1,9 +1,12 @@
 package com.zstars.wxchatgptbot.pojo;
 
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 
@@ -16,31 +19,17 @@ public class Chat implements Serializable {
     /**
      * 
      */
+    
     private Integer chatid;
-
-    /**
-     * 
-     */
+    
     private String userid;
-
-    /**
-     * 
-     */
+    
     private String name;
-
-    /**
-     * 
-     */
+    
     private String prompt;
-
-    /**
-     * 
-     */
+    
     private String promptanswer;
-
-    /**
-     * 
-     */
+    
     private String timestamp;
 
     private static final long serialVersionUID = 1L;
@@ -94,4 +83,6 @@ public class Chat implements Serializable {
         sb.append("]");
         return sb.toString();
     }
+
+
 }

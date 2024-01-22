@@ -4,6 +4,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zstars.wxchatgptbot.mapper.ChatMapper">
 
+
+    <insert id="insertChat" parameterType="com.zstars.wxchatgptbot.pojo.Chat">
+        INSERT INTO Chat (UserId, Name, Prompt, PromptAnswer, Timestamp)
+        VALUES (#{userid}, #{name}, #{prompt}, #{promptanswer}, #{timestamp})
+    </insert>
+
+    <select id="findChatsByName" resultType="com.zstars.wxchatgptbot.pojo.Chat">
+        SELECT * FROM Chat WHERE Name = #{name}
+    </select>
+    
     <resultMap id="BaseResultMap" type="com.zstars.wxchatgptbot.pojo.Chat">
             <id property="chatid" column="ChatId" jdbcType="INTEGER"/>
             <result property="userid" column="UserId" jdbcType="VARCHAR"/>
@@ -25,16 +35,41 @@
         where  ChatId = #{chatid,jdbcType=INTEGER} 
     </select>
 
+    <!--根据UserId查询其历史聊天记录-->
+    <select id="findChatsByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from Chat
+        where UserId = #{userId,jdbcType=VARCHAR}
+        ORDER BY ChatId ASC
+    </select>
+
+    <!--根据UserId查询其历史聊天记录中最近的5条-->
+    <select id="findChatsByUserId_L5" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select *
+        from Chat
+        where ChatId in (
+            select ChatId
+            from Chat
+            where UserId = #{userId,jdbcType=VARCHAR}
+            order by ChatId DESC
+            limit 5
+        )
+        order by ChatId ASC
+    </select>
+
+
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from Chat
         where  ChatId = #{chatid,jdbcType=INTEGER} 
     </delete>
     <insert id="insert" keyColumn="ChatId" keyProperty="chatid" parameterType="com.zstars.wxchatgptbot.pojo.Chat" useGeneratedKeys="true">
         insert into Chat
-        ( ChatId,UserId,Name
+        ( UserId,Name
         ,Prompt,PromptAnswer,Timestamp
         )
-        values (#{chatid,jdbcType=INTEGER},#{userid,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR}
+        values (#{userid,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR}
         ,#{prompt,jdbcType=VARCHAR},#{promptanswer,jdbcType=VARCHAR},#{timestamp,jdbcType=VARCHAR}
         )
     </insert>
@@ -57,6 +92,7 @@
                 <if test="timestamp != null">#{timestamp,jdbcType=VARCHAR},</if>
         </trim>
     </insert>
+    
     <update id="updateByPrimaryKeySelective" parameterType="com.zstars.wxchatgptbot.pojo.Chat">
         update Chat
         <set>

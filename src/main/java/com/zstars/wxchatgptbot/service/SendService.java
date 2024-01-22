@@ -28,8 +28,7 @@ public class SendService {
         dataObject.put("content", content);
 
         JSONObject jsonBody = new JSONObject();
-//        System.out.println(content);
-//        System.out.println(to);
+
         jsonBody.put("to", to);
         jsonBody.put("data", dataObject);
         jsonBody.put("isRoom", isRoom);

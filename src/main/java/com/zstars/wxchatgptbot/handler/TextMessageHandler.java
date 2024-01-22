@@ -1,7 +1,7 @@
 package com.zstars.wxchatgptbot.handler;
 
 import com.zstars.wxchatgptbot.pojo.Sender;
-import com.zstars.wxchatgptbot.service.GptService;
+import com.zstars.wxchatgptbot.service.ChatService;
 import com.zstars.wxchatgptbot.util.GetSenderUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import java.io.IOException;
 public class TextMessageHandler implements MessageHandler {
 
     @Autowired
-    private GptService gptService;
+    private ChatService chatService;
     @Autowired
     private GetSenderUtil getSenderUtil;
 
@@ -24,10 +24,10 @@ public class TextMessageHandler implements MessageHandler {
         if (!sender.getName().isEmpty()) {
             if (sender.isRoom()){
                 if (content.contains("@ZZZ")) {
-                    gptService.askChatgpt(content, sender);
+                    chatService.Chatgpt(content, sender);
                 }
             }else {
-                gptService.askChatgpt(content, sender);
+                chatService.Chatgpt(content, sender);
             }
 
         }

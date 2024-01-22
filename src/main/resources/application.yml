@@ -13,3 +13,8 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+    
+mybatis:
+  type-aliases-package: com.zstars.wxchatgptbot.pojo # 实体类所在的包
+  mapper-locations: classpath:mapper/*.xml # MyBatis 映射文件所在的位置
+  
