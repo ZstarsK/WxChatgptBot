@@ -37,6 +37,7 @@ public class TextMessageHandler extends MessageHandler {
             if (sender.isRoom()){
                 //如果是群聊信息，仅回复@消息
                 if (content.contains("@ZZZ")) {
+                    content = content.replace("@ZZZ", "");
                     String gptRespond = chatService.ChatgptText(content, sender);
                     // 保存聊天记录到数据库
                     saveChat(sender, content, gptRespond);

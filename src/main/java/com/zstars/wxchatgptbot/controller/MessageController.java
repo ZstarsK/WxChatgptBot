@@ -34,6 +34,7 @@ public class MessageController {
             if ("text".equals(type)) {
                 String textContent = request.getParameter("content");
                 if (textContent != null) {
+
                     handler.handle(textContent, source);
                 }
             } else if ("file".equals(type)) {
