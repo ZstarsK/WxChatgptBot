@@ -1,5 +1,9 @@
 server:
   port: 3002
+  address:
+  tomcat:
+    accesslog:
+      ipv6-canonical: 
 logging:
   logback:
     rollingpolicy:
@@ -22,6 +26,12 @@ mybatis:
 Chatgpt:
   Version35: gpt-3.5-turbo-1106
   Version4: gpt-4-1106-preview
-  API_KEY: "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"
+  API_KEY: ""
   API_URL: "https://api.openai.com/v1/chat/completions"
+
+Wechat:
+  name: ZZZ
   
+RemoteServer:
+  ip: 127.0.0.1
+  port: 8123

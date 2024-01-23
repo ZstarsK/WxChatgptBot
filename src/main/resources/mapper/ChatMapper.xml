@@ -5,16 +5,16 @@
 <mapper namespace="com.zstars.wxchatgptbot.mapper.ChatMapper">
 
 
-    <insert id="insertChat" parameterType="com.zstars.wxchatgptbot.pojo.Chat">
+    <insert id="insertChat" parameterType="com.zstars.wxchatgptbot.pojo.entity.Chat">
         INSERT INTO Chat (UserId, Name, Prompt, PromptAnswer, Timestamp)
         VALUES (#{userid}, #{name}, #{prompt}, #{promptanswer}, #{timestamp})
     </insert>
 
-    <select id="findChatsByName" resultType="com.zstars.wxchatgptbot.pojo.Chat">
+    <select id="findChatsByName" resultType="com.zstars.wxchatgptbot.pojo.entity.Chat">
         SELECT * FROM Chat WHERE Name = #{name}
     </select>
     
-    <resultMap id="BaseResultMap" type="com.zstars.wxchatgptbot.pojo.Chat">
+    <resultMap id="BaseResultMap" type="com.zstars.wxchatgptbot.pojo.entity.Chat">
             <id property="chatid" column="ChatId" jdbcType="INTEGER"/>
             <result property="userid" column="UserId" jdbcType="VARCHAR"/>
             <result property="name" column="Name" jdbcType="VARCHAR"/>
@@ -57,7 +57,7 @@
         )
         order by ChatId ASC
     </select>
-    <select id="findChatsByUserId_L1" resultType="com.zstars.wxchatgptbot.pojo.Chat">
+    <select id="findChatsByUserId_L1" resultType="com.zstars.wxchatgptbot.pojo.entity.Chat">
         SELECT *
         FROM Chat
         WHERE UserId = #{userId,jdbcType=VARCHAR}
@@ -70,7 +70,7 @@
         delete from Chat
         where  ChatId = #{chatid,jdbcType=INTEGER} 
     </delete>
-    <insert id="insert" keyColumn="ChatId" keyProperty="chatid" parameterType="com.zstars.wxchatgptbot.pojo.Chat" useGeneratedKeys="true">
+    <insert id="insert" keyColumn="ChatId" keyProperty="chatid" parameterType="com.zstars.wxchatgptbot.pojo.entity.Chat" useGeneratedKeys="true">
         insert into Chat
         ( UserId,Name
         ,Prompt,PromptAnswer,Timestamp
@@ -79,7 +79,7 @@
         ,#{prompt,jdbcType=VARCHAR},#{promptanswer,jdbcType=VARCHAR},#{timestamp,jdbcType=VARCHAR}
         )
     </insert>
-    <insert id="insertSelective" keyColumn="ChatId" keyProperty="chatid" parameterType="com.zstars.wxchatgptbot.pojo.Chat" useGeneratedKeys="true">
+    <insert id="insertSelective" keyColumn="ChatId" keyProperty="chatid" parameterType="com.zstars.wxchatgptbot.pojo.entity.Chat" useGeneratedKeys="true">
         insert into Chat
         <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="chatid != null">ChatId,</if>
@@ -99,7 +99,7 @@
         </trim>
     </insert>
     
-    <update id="updateByPrimaryKeySelective" parameterType="com.zstars.wxchatgptbot.pojo.Chat">
+    <update id="updateByPrimaryKeySelective" parameterType="com.zstars.wxchatgptbot.pojo.entity.Chat">
         update Chat
         <set>
                 <if test="userid != null">
@@ -120,7 +120,7 @@
         </set>
         where   ChatId = #{chatid,jdbcType=INTEGER} 
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.zstars.wxchatgptbot.pojo.Chat">
+    <update id="updateByPrimaryKey" parameterType="com.zstars.wxchatgptbot.pojo.entity.Chat">
         update Chat
         set 
             UserId =  #{userid,jdbcType=VARCHAR},

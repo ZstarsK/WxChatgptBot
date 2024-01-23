@@ -1,7 +1,7 @@
 package com.zstars.wxchatgptbot.handler;
 
 import com.zstars.wxchatgptbot.mapper.ChatMapper;
-import com.zstars.wxchatgptbot.pojo.Chat;
+import com.zstars.wxchatgptbot.pojo.entity.Chat;
 import com.zstars.wxchatgptbot.pojo.Sender;
 import com.zstars.wxchatgptbot.service.ChatService;
 import com.zstars.wxchatgptbot.service.SendService;
@@ -33,7 +33,7 @@ public class FileMessageHandler extends MessageHandler {
         if (!sender.getName().isEmpty()) {
             //暂不支持群里消息图片处理
             if (!sender.isRoom()){
-                String gptRespond = chatService.ChatgptImage(content,sender);
+                String gptRespond = chatService.chatGptImage(content,sender);
                 // 保存聊天记录到数据库
                 saveChat(sender, "A image.", gptRespond);
                 // 发送消息

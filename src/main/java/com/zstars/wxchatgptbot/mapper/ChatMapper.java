@@ -1,6 +1,6 @@
 package com.zstars.wxchatgptbot.mapper;
 
-import com.zstars.wxchatgptbot.pojo.Chat;
+import com.zstars.wxchatgptbot.pojo.entity.Chat;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.data.repository.query.Param;

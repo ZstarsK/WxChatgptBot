@@ -1,20 +1,18 @@
 package com.zstars.wxchatgptbot.handler;
 
 import com.zstars.wxchatgptbot.mapper.ChatMapper;
-import com.zstars.wxchatgptbot.pojo.Chat;
+import com.zstars.wxchatgptbot.pojo.entity.Chat;
 import com.zstars.wxchatgptbot.pojo.Sender;
 import com.zstars.wxchatgptbot.service.ChatService;
 import com.zstars.wxchatgptbot.service.SendService;
-import com.zstars.wxchatgptbot.util.GetResTextUtil;
 import com.zstars.wxchatgptbot.util.GetSenderUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class TextMessageHandler extends MessageHandler {
@@ -27,6 +25,8 @@ public class TextMessageHandler extends MessageHandler {
     private ChatMapper chatMapper;
     @Autowired
     SendService sendService;
+    @Value("${Wechat.name}")
+    String wxNickname;
 
     @Override
     public void handle(String content, String source) throws IOException, JSONException {
@@ -36,16 +36,16 @@ public class TextMessageHandler extends MessageHandler {
         if (!sender.getName().isEmpty()) {
             if (sender.isRoom()){
                 //如果是群聊信息，仅回复@消息
-                if (content.contains("@ZZZ")) {
-                    content = content.replace("@ZZZ", "");
-                    String gptRespond = chatService.ChatgptText(content, sender);
+                if (content.contains("@"+wxNickname)) {
+                    content = content.replace("@"+wxNickname, "");
+                    String gptRespond = chatService.chatGptText(content, sender);
                     // 保存聊天记录到数据库
                     saveChat(sender, content, gptRespond);
                     // 发送消息
                     sendService.sendMessage(sender.getName(), gptRespond, sender.isRoom());
                 }
             }else {
-                String gptRespond = chatService.ChatgptText(content, sender);
+                String gptRespond = chatService.chatGptText(content, sender);
                 // 保存聊天记录到数据库
                 saveChat(sender, content, gptRespond);
                 // 发送消息
