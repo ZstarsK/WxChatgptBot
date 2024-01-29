@@ -4,7 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zstars.wxchatgptbot.mapper.ChatMapper">
 
-
     <insert id="insertChat" parameterType="com.zstars.wxchatgptbot.pojo.entity.Chat">
         INSERT INTO Chat (UserId, Name, Prompt, PromptAnswer, Timestamp)
         VALUES (#{userid}, #{name}, #{prompt}, #{promptanswer}, #{timestamp})

@@ -1,17 +1,14 @@
 package com.zstars.wxchatgptbot.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 @Service
 public class GetResTextUtil {
 
-    public GetResTextUtil(ObjectMapper objectMapper) {
+    public GetResTextUtil() {
     }
 
     public static String getText(String res) throws JSONException {

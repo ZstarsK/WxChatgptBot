@@ -2,6 +2,7 @@ package com.zstars.wxchatgptbot.mapper;
 
 import com.zstars.wxchatgptbot.pojo.entity.Chat;
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -37,9 +38,7 @@ public interface ChatMapper {
     List<Chat> findChatsByUserId(@Param("userId") String userId);
     
     Chat findChatsByUserId_L1(@Param("userId") String userId);
-
-    @Select("SELECT ChatId FROM Chat WHERE UserId = #{userId} ORDER BY ChatId ASC LIMIT #{limit}")
-    List<Integer> findOldestChatIds(@Param("userId") String userId, @Param("limit") int limit);
+    
     @Select("SELECT ChatId FROM Chat WHERE UserId = #{userId} ORDER BY ChatId DESC LIMIT 10, 18446744073709551615")
     List<Integer> findChatIdsToDelete(@Param("userId") String userId);
 

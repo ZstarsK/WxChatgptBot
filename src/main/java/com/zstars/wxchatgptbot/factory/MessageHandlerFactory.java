@@ -14,8 +14,7 @@ public class MessageHandlerFactory {
 
     @Autowired
     private FileMessageHandler fileMessageHandler;
-
-    // 更多处理器...
+    
 
     public MessageHandler getHandler(String type) {
         return switch (type) {

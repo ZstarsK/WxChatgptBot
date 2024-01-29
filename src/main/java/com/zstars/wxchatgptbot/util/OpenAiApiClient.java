@@ -28,6 +28,8 @@ public class OpenAiApiClient {
     private final String model;
     private final String apiKey;
     private final String apiUrl;
+    
+    
 
     @Autowired
     public OpenAiApiClient(@Value("${Chatgpt.Version4}") String model,
@@ -41,8 +43,9 @@ public class OpenAiApiClient {
         Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(serverip, Integer.parseInt(serverPort))); // 代理地址和端口
         this.client = new OkHttpClient.Builder()
                 .proxy(proxy)
-                .readTimeout(60, TimeUnit.SECONDS)
-                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(120, TimeUnit.SECONDS)
+                .connectTimeout(120, TimeUnit.SECONDS)
+                .followRedirects(true)
                 .build();
     }
 
@@ -88,11 +91,12 @@ public class OpenAiApiClient {
         payload.put("max_tokens", 500);
         return payload;
     }
-
+    
     private String convertFileToBase64(MultipartFile file) throws IOException {
         byte[] bytes;
         try (InputStream inputStream = file.getInputStream()) {
             bytes = new byte[inputStream.available()];
+            //noinspection ResultOfMethodCallIgnored
             inputStream.read(bytes);
         }
         return java.util.Base64.getEncoder().encodeToString(bytes);

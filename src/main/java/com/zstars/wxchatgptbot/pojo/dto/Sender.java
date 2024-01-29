@@ -1,4 +1,4 @@
-package com.zstars.wxchatgptbot.pojo;
+package com.zstars.wxchatgptbot.pojo.dto;
 
 import lombok.Getter;
 import lombok.Setter;

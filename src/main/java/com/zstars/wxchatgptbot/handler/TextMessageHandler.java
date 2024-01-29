@@ -2,7 +2,7 @@ package com.zstars.wxchatgptbot.handler;
 
 import com.zstars.wxchatgptbot.mapper.ChatMapper;
 import com.zstars.wxchatgptbot.pojo.entity.Chat;
-import com.zstars.wxchatgptbot.pojo.Sender;
+import com.zstars.wxchatgptbot.pojo.dto.Sender;
 import com.zstars.wxchatgptbot.service.ChatService;
 import com.zstars.wxchatgptbot.service.SendService;
 import com.zstars.wxchatgptbot.util.GetSenderUtil;

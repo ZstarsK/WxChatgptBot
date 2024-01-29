@@ -5,11 +5,11 @@ import org.springframework.boot.configurationprocessor.json.JSONObject;
 
 public class ImageMessageDto {
 
-    private String role;
-    private String text;
-    private String type;
-    private String imageUrl;
-    private String imageDetail;
+    private final String role;
+    private final String text;
+    private final String type;
+    private final String imageUrl;
+    private final String imageDetail;
 
     // 构造函数
     public ImageMessageDto (String role, String text, String type, String imageUrl, String imageDetail) {

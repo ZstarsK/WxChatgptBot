@@ -1,5 +1,6 @@
 package com.zstars.wxchatgptbot.pojo.entity;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import lombok.Data;
@@ -30,6 +31,7 @@ public class Chat implements Serializable {
     
     private String timestamp;
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -67,19 +69,17 @@ public class Chat implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", chatid=").append(chatid);
-        sb.append(", userid=").append(userid);
-        sb.append(", name=").append(name);
-        sb.append(", prompt=").append(prompt);
-        sb.append(", promptanswer=").append(promptanswer);
-        sb.append(", timestamp=").append(timestamp);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+        return getClass().getSimpleName() +
+                " [" +
+                "Hash = " + hashCode() +
+                ", chatid=" + chatid +
+                ", userid=" + userid +
+                ", name=" + name +
+                ", prompt=" + prompt +
+                ", promptanswer=" + promptanswer +
+                ", timestamp=" + timestamp +
+                ", serialVersionUID=" + serialVersionUID +
+                "]";
     }
 
 

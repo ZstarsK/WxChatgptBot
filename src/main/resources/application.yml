@@ -1,19 +1,11 @@
 server:
   port: 3002
-  address:
-  tomcat:
-    accesslog:
-      ipv6-canonical: 
-logging:
-  logback:
-    rollingpolicy:
-      max-file-size: 500MB
 spring:
   servlet:
     multipart:
       max-request-size: 500MB
   datasource:
-    url: jdbc:mysql://124.221.144.71:3306/wxBot?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/wxBot?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -26,12 +18,17 @@ mybatis:
 Chatgpt:
   Version35: gpt-3.5-turbo-1106
   Version4: gpt-4-1106-preview
-  API_KEY: ""
+  API_KEY: "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"
   API_URL: "https://api.openai.com/v1/chat/completions"
 
 Wechat:
   name: ZZZ
   
+# 配置云端服务器的代理以访问OpenAI的API
 RemoteServer:
   ip: 127.0.0.1
   port: 8123
+  
+logging:
+  file:
+    path: /home/ubuntu/logging

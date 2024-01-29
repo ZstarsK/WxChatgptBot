@@ -2,7 +2,7 @@ package com.zstars.wxchatgptbot.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zstars.wxchatgptbot.pojo.Sender;
+import com.zstars.wxchatgptbot.pojo.dto.Sender;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

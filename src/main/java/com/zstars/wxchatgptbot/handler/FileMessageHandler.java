@@ -2,7 +2,7 @@ package com.zstars.wxchatgptbot.handler;
 
 import com.zstars.wxchatgptbot.mapper.ChatMapper;
 import com.zstars.wxchatgptbot.pojo.entity.Chat;
-import com.zstars.wxchatgptbot.pojo.Sender;
+import com.zstars.wxchatgptbot.pojo.dto.Sender;
 import com.zstars.wxchatgptbot.service.ChatService;
 import com.zstars.wxchatgptbot.service.SendService;
 import com.zstars.wxchatgptbot.util.GetSenderUtil;
@@ -35,18 +35,18 @@ public class FileMessageHandler extends MessageHandler {
             if (!sender.isRoom()){
                 String gptRespond = chatService.chatGptImage(content,sender);
                 // 保存聊天记录到数据库
-                saveChat(sender, "A image.", gptRespond);
+                saveChat(sender, gptRespond);
                 // 发送消息
                 sendService.sendMessage(sender.getName(), gptRespond, sender.isRoom());
             }
         }
     }
     
-    private void saveChat(Sender sender, String content, String gptRespond) {
+    private void saveChat(Sender sender, String gptRespond) {
         Chat chat = new Chat();
         chat.setName(sender.getName());
         chat.setUserid(sender.getId());
-        chat.setPrompt(content);
+        chat.setPrompt("A image.");
         chat.setPromptanswer(gptRespond);
         chat.setTimestamp(String.valueOf(new Date().getTime()));
         System.out.println(chat);
